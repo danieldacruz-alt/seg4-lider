@@ -3,443 +3,717 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SEG4 - Registro do Lider</title>
+<title>SEG4 - Controle de Presenca</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#F7F6F2;--card:#fff;--border:#E2DFD6;--text:#1A1916;--muted:#8C8878;
-  --green:#2D6A4F;--gbg:#D8F3DC;--red:#C1121F;--rbg:#FFE5E7;
-  --amber:#B45309;--abg:#FEF3C7;--blue:#1E40AF;--bbg:#DBEAFE;--r:12px}
-body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,sans-serif;color:var(--text);min-height:100vh}
-.nav{background:var(--text);padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
-.nav-logo{color:#fff;font-weight:700;font-size:16px;letter-spacing:1px}
-.nav-sub{color:rgba(255,255,255,.5);font-size:12px}
-.wrap{max-width:520px;margin:0 auto;padding:20px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:14px}
-.card-title{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
-.hero{text-align:center;padding:24px 0 8px}
-.hero-date{font-size:32px;font-weight:300;letter-spacing:-1px}
-.hero-day{font-size:13px;color:var(--muted);margin-top:4px}
-.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
-.btn-big{padding:20px;border-radius:var(--r);border:2px solid var(--border);background:var(--card);cursor:pointer;font-size:15px;font-weight:700;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:6px;font-family:inherit}
-.btn-big .ic{font-size:28px}
-.btn-big:hover{border-color:var(--text)}
-.btn-big.yes{background:var(--gbg);border-color:var(--green);color:var(--green)}
-.btn-big.no{background:var(--rbg);border-color:var(--red);color:var(--red)}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#f5f4f0;color:#1a1916;min-height:100vh}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-card{background:#fff;border:1px solid #e2dfd6;border-radius:16px;padding:2.5rem;width:100%;max-width:380px;text-align:center}
+.login-logo{font-size:28px;font-weight:800;color:#e8510a;letter-spacing:1px;margin-bottom:4px}
+.login-sub{font-size:13px;color:#8c8878;margin-bottom:2rem}
+.login-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.5rem}
+.login-opt{padding:1rem;border:2px solid #e2dfd6;border-radius:12px;cursor:pointer;transition:all .15s;background:#fff}
+.login-opt:hover{border-color:#1a1916}
+.login-opt.sel{border-color:#e8510a;background:#fff8f5}
+.login-opt .ic{font-size:28px;margin-bottom:6px}
+.login-opt .lb{font-size:13px;font-weight:700}
+.login-opt .ds{font-size:11px;color:#8c8878;margin-top:2px}
+.pin-field{width:100%;padding:14px;text-align:center;letter-spacing:.4em;font-size:20px;border:1.5px solid #e2dfd6;border-radius:10px;font-family:inherit;color:#1a1916;background:#f5f4f0;margin-bottom:12px;outline:none}
+.pin-field:focus{border-color:#e8510a;background:#fff}
+.pin-err{font-size:12px;color:#c1121f;margin-bottom:12px;display:none}
+.btn-login{width:100%;padding:13px;background:#1a1916;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn-login:hover{background:#333}
+
+/* LIDER */
+.lider-wrap{max-width:540px;margin:0 auto;padding:0 0 3rem}
+.lider-nav{background:#1a1916;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.lider-nav-logo{color:#fff;font-weight:800;font-size:16px;letter-spacing:1px}
+.lider-nav-right{display:flex;align-items:center;gap:12px}
+.lider-nav-tabs{display:flex}
+.lider-tab{color:rgba(255,255,255,.5);font-size:12px;font-weight:600;padding:6px 12px;cursor:pointer;border-radius:6px;border:none;background:transparent;font-family:inherit}
+.lider-tab:hover{color:#fff}
+.lider-tab.active{color:#fff;background:rgba(255,255,255,.12)}
+.logout-btn{color:rgba(255,255,255,.4);font-size:11px;cursor:pointer;border:none;background:transparent;font-family:inherit}
+.logout-btn:hover{color:#fff}
+.lider-body{padding:20px}
+.hero{text-align:center;padding:20px 0 12px}
+.hero-date{font-size:30px;font-weight:300;letter-spacing:-1px}
+.hero-day{font-size:13px;color:#8c8878;margin-top:4px}
+.card{background:#fff;border:1px solid #e2dfd6;border-radius:12px;padding:18px;margin-bottom:12px}
+.card-lbl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#8c8878;margin-bottom:12px}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.btn-big{padding:18px 10px;border-radius:12px;border:2px solid #e2dfd6;background:#fff;cursor:pointer;font-size:14px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:5px;font-family:inherit;transition:all .15s}
+.btn-big:hover{border-color:#1a1916}
+.btn-big.yes{background:#d8f3dc;border-color:#2d6a4f;color:#2d6a4f}
+.btn-big.no{background:#ffe5e7;border-color:#c1121f;color:#c1121f}
+.btn-big .ic{font-size:26px}
 .fg{margin-bottom:12px}
-.fg label{font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px}
-.fg select,.fg input,.fg textarea{width:100%;padding:10px 13px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--card);color:var(--text);font-family:inherit;outline:none}
-.fg select:focus,.fg input:focus,.fg textarea:focus{border-color:var(--text)}
-.fg textarea{min-height:72px;resize:vertical}
-.abs-block{border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;background:var(--bg)}
-.btn{padding:11px 20px;border-radius:9px;border:none;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
-.btn-p{background:var(--text);color:#fff;width:100%;justify-content:center}
+.fg label{font-size:12px;font-weight:600;color:#8c8878;display:block;margin-bottom:5px}
+.fg select,.fg input,.fg textarea{width:100%;padding:10px 12px;border:1px solid #e2dfd6;border-radius:8px;font-size:14px;background:#fff;color:#1a1916;font-family:inherit;outline:none}
+.fg select:focus,.fg input:focus,.fg textarea:focus{border-color:#1a1916}
+.fg textarea{min-height:70px;resize:vertical}
+.abs-block{border:1px solid #e2dfd6;border-radius:10px;padding:14px;margin-bottom:10px;background:#f5f4f0}
+.rm-btn{background:none;border:none;color:#c1121f;font-size:12px;cursor:pointer;font-family:inherit}
+.btn-p{width:100%;padding:12px;background:#1a1916;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:4px}
 .btn-p:hover{background:#333}
-.btn-p:active{transform:scale(.98)}
 .btn-p:disabled{background:#aaa;cursor:not-allowed}
-.btn-s{background:var(--bg);color:var(--text);border:1px solid var(--border);font-size:12px;padding:7px 12px}
-.btn-s:hover{border-color:var(--text)}
-.rm-btn{background:none;border:none;color:var(--red);font-size:12px;cursor:pointer;font-family:inherit}
-.success{text-align:center;padding:32px 20px}
-.success .ic{font-size:52px;margin-bottom:14px}
-.success h2{font-size:20px;font-weight:700;margin-bottom:8px}
-.success p{font-size:14px;color:var(--muted);line-height:1.7}
-.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700}
-.tag-falta{background:var(--rbg);color:var(--red)}
-.tag-folga{background:var(--abg);color:var(--amber)}
-.tag-atestado{background:var(--bbg);color:var(--blue)}
-.tag-outro{background:var(--bg);color:var(--muted)}
-.hist-item{padding:12px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px}
+.btn-s{padding:8px 14px;background:#f5f4f0;color:#1a1916;border:1px solid #e2dfd6;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn-s:hover{border-color:#1a1916}
+.success-box{text-align:center;padding:28px 20px}
+.success-box .ic{font-size:48px;margin-bottom:12px}
+.success-box h2{font-size:18px;font-weight:700;margin-bottom:6px}
+.success-box p{font-size:14px;color:#8c8878;line-height:1.7}
+.hist-item{padding:12px;border:1px solid #e2dfd6;border-radius:10px;margin-bottom:8px}
 .hist-date{font-size:12px;font-weight:700;margin-bottom:4px}
-.hist-abs{font-size:12px;color:var(--muted);margin-top:6px}
-.spinner{display:none;text-align:center;padding:20px;color:var(--muted);font-size:14px}
-.spinner.on{display:block}
-.err{background:var(--rbg);color:var(--red);padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px;display:none}
-.err.on{display:block}
-.tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:16px}
-.tab{padding:10px 16px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
-.tab.active{color:var(--text);border-bottom-color:var(--text)}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700}
+.tag-falta{background:#ffe5e7;color:#c1121f}
+.tag-folga{background:#fef3c7;color:#b45309}
+.tag-atestado{background:#dbeafe;color:#1e40af}
+.tag-outro{background:#f5f4f0;color:#8c8878}
+.empty{text-align:center;padding:24px;color:#8c8878;font-size:13px}
+.spinner{text-align:center;padding:20px;color:#8c8878;font-size:13px}
+.sync-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#27ae60;margin-right:5px}
+.sync-dot.warn{background:#f39c12}
+.sync-dot.err{background:#c1121f}
+
+/* DASHBOARD */
+.dash-wrap{display:flex;min-height:100vh}
+.dash-sidebar{width:170px;background:#1a1a2e;display:flex;flex-direction:column;padding:1.25rem 0;position:fixed;top:0;left:0;bottom:0;z-index:10}
+.dash-sidebar .logo{color:#e8510a;font-weight:800;font-size:20px;letter-spacing:1px;padding:0 1.25rem 1.5rem}
+.dash-sidebar .sub{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.dsb{display:block;width:100%;text-align:left;padding:10px 1.25rem;font-size:13px;font-weight:500;color:#aaa;background:transparent;border:none;border-left:3px solid transparent;cursor:pointer;font-family:inherit;transition:all .15s}
+.dsb:hover{color:#fff;background:rgba(255,255,255,.05)}
+.dsb.active{color:#fff;border-left-color:#e8510a;background:rgba(255,255,255,.07)}
+.dash-bottom{padding:1rem 1.25rem;border-top:1px solid rgba(255,255,255,.1);margin-top:auto}
+.dash-bottom label{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px}
+.dash-bottom select{width:100%;background:#2a2a3e;border:1px solid #444;color:#fff;padding:6px 8px;border-radius:6px;font-size:12px;font-family:inherit}
+.dash-main{margin-left:170px;flex:1;padding:2rem}
+.dpage{display:none}.dpage.active{display:block}
+.dph{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem}
+.dpt{font-size:26px;font-weight:800;text-transform:uppercase;letter-spacing:1px}
+.dps{font-size:13px;color:#8c8878;margin-top:4px}
+.dbtn-p{background:#e8510a;color:#fff;border:none;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.dbtn-p:hover{background:#c94008}
+.dbtn-s{background:#fff;color:#1a1916;border:1px solid #e2dfd6;padding:9px 14px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit}
+.dbtn-s:hover{background:#f5f4f0}
+.sbar{background:#fff;border:1px solid #e2dfd6;border-radius:10px;padding:10px 14px;margin-bottom:1.5rem;font-size:13px;color:#8c8878;display:flex;align-items:center;gap:8px}
+.alert-box{border-radius:10px;padding:11px 14px;margin-bottom:1.25rem;font-size:13px;display:none;align-items:center;gap:8px}
+.alert-box.on{display:flex}
+.alert-warn{background:#ffe5e7;border:1px solid rgba(193,18,31,.2);color:#c1121f}
+.alert-ok{background:#d8f3dc;border:1px solid rgba(45,106,79,.2);color:#2d6a4f}
+.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:1.25rem}
+.kpi{background:#fff;border:1px solid #e2dfd6;border-radius:12px;padding:1rem}
+.kpi-l{font-size:10px;font-weight:700;color:#8c8878;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.6rem}
+.kpi-v{font-size:26px;font-weight:800;color:#1a1916}
+.kpi-v.or{color:#e8510a}.kpi-v.gr{color:#27ae60}.kpi-v.pu{color:#7b2d8b}
+.kpi-s{font-size:11px;color:#8c8878;margin-top:3px}
+.setor-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.25rem}
+.sc{background:#fff;border:1px solid #e2dfd6;border-radius:12px;padding:1rem}
+.sc-name{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.6rem;display:flex;justify-content:space-between}
+.sc-f{font-size:26px;font-weight:800;color:#e8510a}
+.sc-s{font-size:11px;color:#8c8878;margin-top:3px}
+.abs-info{font-size:11px;color:#8c8878;text-align:right}
+.abs-info span{font-size:13px;font-weight:700;color:#27ae60;display:block}
+.tc{background:#fff;border:1px solid #e2dfd6;border-radius:12px;overflow:hidden}
+.tc-hdr{padding:1rem 1.25rem;border-bottom:1px solid #e2dfd6;font-size:14px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+table{width:100%;border-collapse:collapse}
+th{font-size:10px;font-weight:700;color:#8c8878;text-transform:uppercase;letter-spacing:.5px;padding:9px 14px;text-align:left;border-bottom:1px solid #e2dfd6;background:#f5f4f0}
+td{padding:12px 14px;font-size:13px;border-bottom:1px solid #e2dfd6}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#faf9f6}
+.dtag{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase}
+.dtag-lo{background:#fdeee6;color:#e8510a}
+.dtag-log{background:#f5eef8;color:#9b59b6}
+.dtag-ftp{background:#eaf2fb;color:#1e40af}
+.dtag-hub{background:#eafaf1;color:#27ae60}
+.dtag-falta{background:#ffe5e7;color:#c1121f}
+.dtag-folga{background:#fef3c7;color:#b45309}
+.dtag-atestado{background:#dbeafe;color:#1e40af}
+.dtag-outro{background:#f5f4f0;color:#8c8878}
+.dtag-lider{background:#e2e3ff;color:#3730a3}
+.dtag-supervisor{background:#fde8e8;color:#9b1c1c}
+.dbtn-del{background:none;border:1px solid #fca5a5;color:#ef4444;border-radius:6px;padding:3px 9px;cursor:pointer;font-size:11px;font-family:inherit}
+.dbtn-del:hover{background:#fee2e2}
+.fil{display:flex;gap:8px;margin-bottom:1rem}
+.fil select{padding:7px 11px;border:1px solid #e2dfd6;border-radius:8px;font-size:13px;background:#fff;font-family:inherit;color:#1a1916}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;align-items:center;justify-content:center}
+.ov.open{display:flex}
+.modal{background:#fff;border-radius:16px;padding:2rem;width:440px;max-width:95vw}
+.modal h2{font-size:17px;font-weight:700;margin-bottom:1.25rem}
+.mfg{margin-bottom:.9rem}
+.mfg label{font-size:12px;font-weight:600;color:#8c8878;display:block;margin-bottom:5px}
+.mfg input,.mfg select{width:100%;padding:9px 12px;border:1px solid #e2dfd6;border-radius:8px;font-size:14px;font-family:inherit;color:#1a1916;outline:none}
+.mfg input:focus,.mfg select:focus{border-color:#e8510a}
+.mfg-row{display:flex;gap:10px}
+.mfg-row .mfg{flex:1}
+.mfoot{display:flex;justify-content:flex-end;gap:10px;margin-top:1.25rem}
+.mbtn-c{background:#fff;border:1px solid #e2dfd6;padding:9px 18px;border-radius:8px;font-size:14px;cursor:pointer;font-family:inherit}
+.mots-section{margin-bottom:1.5rem}
+.mots-section h3{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.75rem;display:flex;align-items:center;gap:8px}
 </style>
 </head>
 <body>
-<div class="nav">
-  <div>
-    <div class="nav-logo">SEG4</div>
-    <div class="nav-sub">Registro do Lider</div>
+
+<!-- ═══ LOGIN ═══════════════════════════════════════════════ -->
+<div id="login-screen" class="login-wrap">
+  <div class="login-card">
+    <div class="login-logo">SEG4</div>
+    <div class="login-sub">Controle de Presenca</div>
+    <div class="login-options">
+      <div class="login-opt" id="opt-lider" onclick="selOpt('lider')">
+        <div class="ic">&#128101;</div>
+        <div class="lb">SEG4</div>
+        <div class="ds">Registrar presenca</div>
+      </div>
+      <div class="login-opt" id="opt-super" onclick="selOpt('super')">
+        <div class="ic">&#128200;</div>
+        <div class="lb">KAVAK</div>
+        <div class="ds">Ver dashboard</div>
+      </div>
+    </div>
+    <input type="password" class="pin-field" id="pin-input" placeholder="Digite o PIN" maxlength="6"/>
+    <p class="pin-err" id="pin-err">PIN incorreto. Tente novamente.</p>
+    <button class="btn-login" onclick="doLogin()">Entrar</button>
   </div>
-  <div id="sync-status" style="font-size:11px;color:rgba(255,255,255,.5)">&#9679; conectando...</div>
 </div>
 
-<div class="wrap">
-  <div class="tabs">
-    <div class="tab active" id="tab-reg" onclick="showTab('reg')">Registro Diario</div>
-    <div class="tab" id="tab-hist" onclick="showTab('hist')">Historico</div>
-  </div>
-
-  <!-- REGISTRO -->
-  <div id="view-reg">
-    <div class="hero">
-      <div class="hero-date" id="hdate"></div>
-      <div class="hero-day" id="hday"></div>
-    </div>
-
-    <div id="step1">
-      <div class="card">
-        <div class="card-title">Status da equipe hoje</div>
-        <p style="font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.6">A equipe SEG4 esta completa hoje?</p>
-        <div class="btn-row">
-          <button class="btn-big" id="btnS" onclick="answerComplete(true)">
-            <span class="ic">&#9989;</span><span>SIM</span>
-            <span style="font-size:11px;font-weight:400;opacity:.7">Todos presentes</span>
-          </button>
-          <button class="btn-big" id="btnN" onclick="answerComplete(false)">
-            <span class="ic">&#9888;&#65039;</span><span>NAO</span>
-            <span style="font-size:11px;font-weight:400;opacity:.7">Ha ausencias</span>
-          </button>
-        </div>
+<!-- ═══ LIDER ════════════════════════════════════════════════ -->
+<div id="lider-screen" style="display:none">
+  <div class="lider-nav">
+    <div class="lider-nav-logo">SEG4</div>
+    <div class="lider-nav-right">
+      <div class="lider-nav-tabs">
+        <button class="lider-tab active" id="ltab-reg" onclick="liderTab('reg')">Registro</button>
+        <button class="lider-tab" id="ltab-hist" onclick="liderTab('hist')">Historico</button>
       </div>
-    </div>
-
-    <div id="step2" style="display:none">
-      <div class="err" id="err2"></div>
-      <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-          <span class="card-title" style="margin:0">Ausencias</span>
-          <button class="btn btn-s" onclick="addAbs()">+ Adicionar</button>
-        </div>
-        <div id="abs-list"><p style="font-size:13px;color:var(--muted);text-align:center;padding:14px 0">Clique em + Adicionar para registrar uma ausencia.</p></div>
-      </div>
-      <div class="card">
-        <div class="fg" style="margin:0">
-          <label>Observacoes (opcional)</label>
-          <textarea id="obs" placeholder="Ex: comunicacao tardia, motorista justificou..."></textarea>
-        </div>
-      </div>
-      <button class="btn btn-p" id="btnSalvar" onclick="salvar()">Salvar e Enviar</button>
-      <div style="text-align:center;margin-top:12px">
-        <span style="font-size:12px;color:var(--muted);cursor:pointer" onclick="resetForm()">&#8592; Voltar</span>
-      </div>
-    </div>
-
-    <div id="step3" style="display:none">
-      <div class="card">
-        <div class="success">
-          <div class="ic" id="sic">&#9989;</div>
-          <h2 id="stitle">Registro Enviado!</h2>
-          <p id="ssub"></p>
-        </div>
-      </div>
-      <button class="btn btn-s" style="width:100%;text-align:center" onclick="resetForm()">Novo Registro</button>
+      <button class="logout-btn" onclick="doLogout()">Sair</button>
     </div>
   </div>
+  <div class="lider-body">
+    <div id="lview-reg">
+      <div class="hero">
+        <div class="hero-date" id="hdate"></div>
+        <div class="hero-day" id="hday"></div>
+      </div>
+      <div id="lstep1">
+        <div class="card">
+          <div class="card-lbl">Status da equipe hoje</div>
+          <p style="font-size:14px;color:#8c8878;margin-bottom:14px;line-height:1.6">A equipe SEG4 esta completa hoje?</p>
+          <div class="btn-row">
+            <button class="btn-big" id="lbS" onclick="answerComplete(true)">
+              <span class="ic">&#9989;</span><span>SIM</span>
+              <span style="font-size:11px;font-weight:400;opacity:.7">Todos presentes</span>
+            </button>
+            <button class="btn-big" id="lbN" onclick="answerComplete(false)">
+              <span class="ic">&#9888;</span><span>NAO</span>
+              <span style="font-size:11px;font-weight:400;opacity:.7">Ha ausencias</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div id="lstep2" style="display:none">
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <span class="card-lbl" style="margin:0">Ausencias</span>
+            <button class="btn-s" onclick="addAbs()">+ Adicionar</button>
+          </div>
+          <div id="abs-list"></div>
+        </div>
+        <div class="card">
+          <div class="fg" style="margin:0">
+            <label>Observacoes (opcional)</label>
+            <textarea id="lobs" placeholder="Ex: motorista comunicou tarde..."></textarea>
+          </div>
+        </div>
+        <button class="btn-p" id="lbtnSalvar" onclick="lSalvar()">Salvar e Enviar</button>
+        <div style="text-align:center;margin-top:12px">
+          <span style="font-size:12px;color:#8c8878;cursor:pointer" onclick="lReset()">&#8592; Voltar</span>
+        </div>
+      </div>
+      <div id="lstep3" style="display:none">
+        <div class="card">
+          <div class="success-box">
+            <div class="ic" id="sic">&#9989;</div>
+            <h2 id="stitle">Enviado!</h2>
+            <p id="ssub"></p>
+          </div>
+        </div>
+        <button class="btn-s" style="width:100%;text-align:center" onclick="lReset()">Novo Registro</button>
+      </div>
+    </div>
+    <div id="lview-hist" style="display:none">
+      <div class="spinner" id="lspin">Carregando...</div>
+      <div id="lhist-list" style="display:none"></div>
+    </div>
+  </div>
+</div>
 
-  <!-- HISTORICO -->
-  <div id="view-hist" style="display:none">
-    <div class="spinner on" id="spin-hist">Carregando historico...</div>
-    <div id="hist-list" style="display:none"></div>
+<!-- ═══ DASHBOARD ════════════════════════════════════════════ -->
+<div id="dash-screen" class="dash-wrap" style="display:none">
+  <div class="dash-sidebar">
+    <div class="logo">KAVAK<div class="sub">Controle SEG4</div></div>
+    <button class="dsb active" id="dnav-dash" onclick="dPage('dash')">&#9741; Dashboard</button>
+    <button class="dsb" id="dnav-ocorr" onclick="dPage('ocorr')">&#9888; Ocorrencias</button>
+    <button class="dsb" id="dnav-mots" onclick="dPage('mots')">&#128100; Motoristas</button>
+    <div class="dash-bottom">
+      <label>Mes de Referencia</label>
+      <select id="mes-sel" onchange="onMesChange()">
+        <option value="2026-04">Abril de 2026</option>
+        <option value="2026-05">Maio de 2026</option>
+        <option value="2026-06">Junho de 2026</option>
+        <option value="2026-07">Julho de 2026</option>
+      </select>
+      <button class="logout-btn" style="margin-top:12px;display:block" onclick="doLogout()">Sair</button>
+    </div>
+  </div>
+  <div class="dash-main">
+    <div class="dpage active" id="dpage-dash">
+      <div class="dph">
+        <div><div class="dpt">Dashboard</div><div class="dps" id="ds-sub">Abril de 2026</div></div>
+        <div style="display:flex;gap:8px">
+          <button class="dbtn-s" onclick="dSync()">&#8635; Sincronizar</button>
+          <button class="dbtn-p" onclick="abrirModal()">+ Nova Ocorrencia</button>
+        </div>
+      </div>
+      <div class="sbar"><span class="sync-dot" id="sdot"></span><span id="stext">Conectando...</span></div>
+      <div class="alert-box alert-warn" id="al-warn">&#9888; Lider ainda nao registrou a presenca hoje!</div>
+      <div class="alert-box alert-ok" id="al-ok">&#9989; Lider ja registrou a presenca hoje.</div>
+      <div class="kpi-grid">
+        <div class="kpi"><div class="kpi-l">Motoristas</div><div class="kpi-v">23</div><div class="kpi-s">23 posicoes</div></div>
+        <div class="kpi"><div class="kpi-l">Faltas no mes</div><div class="kpi-v or" id="kf">0</div><div class="kpi-s" id="kf-s">0 atestado(s)</div></div>
+        <div class="kpi"><div class="kpi-l">Desconto Total</div><div class="kpi-v or" id="kd">R$ 0,00</div><div class="kpi-s">por faltas</div></div>
+        <div class="kpi"><div class="kpi-l">Registros do mes</div><div class="kpi-v pu" id="kr">0</div><div class="kpi-s">dias registrados</div></div>
+        <div class="kpi"><div class="kpi-l">Previsao SEG4</div><div class="kpi-v gr" id="kp">R$ 148.650,47</div><div class="kpi-s">Base: R$ 148.650,47</div></div>
+      </div>
+      <div class="setor-grid">
+        <div class="sc"><div class="sc-name" style="color:#e8510a">LOG EXTERNA<span class="abs-info">Abs<span id="abs-lo">0%</span></span></div><div class="sc-f" id="f-lo">0</div><div class="sc-s">faltas - 7 motoristas</div></div>
+        <div class="sc"><div class="sc-name" style="color:#9b59b6">LOG GUINCHO<span class="abs-info">Abs<span id="abs-log">0%</span></span></div><div class="sc-f" id="f-log">0</div><div class="sc-s">faltas - 2 motoristas</div></div>
+        <div class="sc"><div class="sc-name" style="color:#1e40af">FTP<span class="abs-info">Abs<span id="abs-ftp">0%</span></span></div><div class="sc-f" id="f-ftp">0</div><div class="sc-s">faltas - 7 motoristas</div></div>
+        <div class="sc"><div class="sc-name" style="color:#27ae60">HUB OPS<span class="abs-info">Abs<span id="abs-hub">0%</span></span></div><div class="sc-f" id="f-hub">0</div><div class="sc-s">faltas - 7 motoristas</div></div>
+      </div>
+      <div class="tc">
+        <div class="tc-hdr">Ocorrencias recentes</div>
+        <table><thead><tr><th>Data</th><th>Motorista</th><th>Setor</th><th>Tipo</th><th>Origem</th><th>Obs</th><th></th></tr></thead>
+        <tbody id="tb-dash"></tbody></table>
+      </div>
+    </div>
+    <div class="dpage" id="dpage-ocorr">
+      <div class="dph">
+        <div><div class="dpt">Ocorrencias</div><div class="dps">Registro do mes</div></div>
+        <button class="dbtn-p" onclick="abrirModal()">+ Lancar</button>
+      </div>
+      <div class="fil">
+        <select id="f-setor" onchange="dRenderOcorr()">
+          <option value="">Todos setores</option>
+          <option value="LOG EXTERNA">LOG EXTERNA</option>
+          <option value="LOG EXTERNA - GUINCHO">LOG EXTERNA - GUINCHO</option>
+          <option value="FTP">FTP</option>
+          <option value="HUB OPS">HUB OPS</option>
+        </select>
+        <select id="f-tipo" onchange="dRenderOcorr()">
+          <option value="">Todos tipos</option>
+          <option value="Falta">Falta</option>
+          <option value="Folga">Folga</option>
+          <option value="Atestado">Atestado</option>
+        </select>
+      </div>
+      <div class="tc"><table><thead><tr><th>Data</th><th>Motorista</th><th>Setor</th><th>Tipo</th><th>Desconto</th><th>Origem</th><th>Obs</th><th></th></tr></thead>
+      <tbody id="tb-ocorr"></tbody></table></div>
+    </div>
+    <div class="dpage" id="dpage-mots">
+      <div class="dph"><div><div class="dpt">Motoristas</div><div class="dps">23 colaboradores ativos</div></div></div>
+      <div id="mots-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="ov" id="modal-ov">
+  <div class="modal">
+    <h2>Lancar Ocorrencia</h2>
+    <div class="mfg-row">
+      <div class="mfg"><label>Data</label><input type="date" id="oc-data"/></div>
+      <div class="mfg"><label>Motorista</label><select id="oc-mot"></select></div>
+    </div>
+    <div class="mfg"><label>Tipo</label>
+      <select id="oc-tipo"><option value="Falta">Falta</option><option value="Folga">Folga</option><option value="Atestado">Atestado</option></select>
+    </div>
+    <div class="mfg"><label>Observacao (opcional)</label><input type="text" id="oc-obs" placeholder="Opcional..."/></div>
+    <div class="mfoot">
+      <button class="mbtn-c" onclick="fecharModal()">Cancelar</button>
+      <button class="dbtn-p" onclick="salvarOcorr()">Salvar</button>
+    </div>
   </div>
 </div>
 
 <script>
 var API = "$2a$10$4xpgwCDBwtfpRMCVvHrxduVGEK1n9afJeVypFAVHbsQON15c6C/ku";
+var PIN_L = "1234";
+var PIN_S = "9999";
 var BIN_ID = null;
-var BIN_NAME = "seg4-registros";
-
-var MOTORISTAS = [
-  "DOUGLAS RODRIGUES DE MELO",
-  "EMERSON DA COSTA PARRA",
-  "JEFERSON LUIS DE SOUZA",
-  "RAQUEL DOS SANTOS AVELINO",
-  "ROGERIO DE JESUS OLIVEIRA",
-  "RONE MARQUES DA SILVA",
-  "RAPHAEL PINHEIRO SOUTO DE ALMEIDA",
-  "ELIEL VLADIMIR DOS SANTOS",
-  "GABRIEL HENRIQUE GONCALVES",
-  "MARCIEL PIA DA SILVA",
-  "RAFAEL SANTOS DIAS",
-  "SERGIO AVELINO MACHADO",
-  "WESLEY FERREIRA CARNEIRO DA SILVA",
-  "ADRIANO MARCOS SANTOS AURELIANO",
-  "EVERITON SANTOS NASCIMENTO",
-  "GABRIEL BORGES SOUTO",
-  "MAURICIO SANTOS DAMASCENO",
-  "REINALDO VICENTE DE ALCANTARA"
-];
-
+var MES = "2026-04";
+var CONTRATO = 148650.47;
+var curOpt = "";
 var absencias = [];
 
-// -- DATA ------------------------------------------------------
-(function(){
-  var now = new Date();
-  var dias = ["Domingo","Segunda-feira","Terca-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sabado"];
-  var meses = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
-  document.getElementById("hdate").textContent = now.getDate()+" "+meses[now.getMonth()]+" "+now.getFullYear();
-  document.getElementById("hday").textContent = dias[now.getDay()];
-})();
+var MOTORISTAS = ["DOUGLAS RODRIGUES DE MELO","EMERSON DA COSTA PARRA","JEFERSON LUIS DE SOUZA","RAQUEL DOS SANTOS AVELINO","ROGERIO DE JESUS OLIVEIRA","RONE MARQUES DA SILVA","RAPHAEL PINHEIRO SOUTO DE ALMEIDA","ELIEL VLADIMIR DOS SANTOS","GABRIEL HENRIQUE GONCALVES","MARCIEL PIA DA SILVA","RAFAEL SANTOS DIAS","SERGIO AVELINO MACHADO","WESLEY FERREIRA CARNEIRO DA SILVA","ADRIANO MARCOS SANTOS AURELIANO","EVERITON SANTOS NASCIMENTO","GABRIEL BORGES SOUTO","MAURICIO SANTOS DAMASCENO","REINALDO VICENTE DE ALCANTARA"];
 
-// -- JSONBIN ---------------------------------------------------
-function getOrCreateBin(cb) {
-  // Try to find existing bin
-  fetch("https://api.jsonbin.io/v3/b?X-Bin-Name="+BIN_NAME, {
-    headers: {"X-Master-Key": API}
-  })
-  .then(function(r){ return r.json(); })
+var SETOR_MAP = {"DOUGLAS RODRIGUES DE MELO":"LOG EXTERNA","EMERSON DA COSTA PARRA":"LOG EXTERNA","JEFERSON LUIS DE SOUZA":"LOG EXTERNA","RAQUEL DOS SANTOS AVELINO":"LOG EXTERNA","ROGERIO DE JESUS OLIVEIRA":"LOG EXTERNA","RONE MARQUES DA SILVA":"LOG EXTERNA","RAPHAEL PINHEIRO SOUTO DE ALMEIDA":"LOG EXTERNA - GUINCHO","ELIEL VLADIMIR DOS SANTOS":"FTP","GABRIEL HENRIQUE GONCALVES":"FTP","MARCIEL PIA DA SILVA":"FTP","RAFAEL SANTOS DIAS":"FTP","SERGIO AVELINO MACHADO":"FTP","WESLEY FERREIRA CARNEIRO DA SILVA":"FTP","ADRIANO MARCOS SANTOS AURELIANO":"HUB OPS","EVERITON SANTOS NASCIMENTO":"HUB OPS","GABRIEL BORGES SOUTO":"HUB OPS","MAURICIO SANTOS DAMASCENO":"HUB OPS","REINALDO VICENTE DE ALCANTARA":"HUB OPS"};
+
+var SALARIOS = {"LOG EXTERNA":6357.24,"LOG EXTERNA - GUINCHO":6357.24,"FTP":5725.26,"HUB OPS":5725.26};
+var SETOR_SIZES = {"LOG EXTERNA":7,"LOG EXTERNA - GUINCHO":2,"FTP":7,"HUB OPS":7};
+
+var SETOR_MOTS = {
+  "LOG EXTERNA":["DOUGLAS RODRIGUES DE MELO","EMERSON DA COSTA PARRA","JEFERSON LUIS DE SOUZA","RAQUEL DOS SANTOS AVELINO","ROGERIO DE JESUS OLIVEIRA","RONE MARQUES DA SILVA"],
+  "LOG EXTERNA - GUINCHO":["RAPHAEL PINHEIRO SOUTO DE ALMEIDA"],
+  "FTP":["ELIEL VLADIMIR DOS SANTOS","GABRIEL HENRIQUE GONCALVES","MARCIEL PIA DA SILVA","RAFAEL SANTOS DIAS","SERGIO AVELINO MACHADO","WESLEY FERREIRA CARNEIRO DA SILVA"],
+  "HUB OPS":["ADRIANO MARCOS SANTOS AURELIANO","EVERITON SANTOS NASCIMENTO","GABRIEL BORGES SOUTO","MAURICIO SANTOS DAMASCENO","REINALDO VICENTE DE ALCANTARA"]
+};
+
+function fmtMoney(v){
+  var s=v.toFixed(2).replace(".",",");
+  return "R$ "+s.replace(/(\d)(?=(\d{3})+,)/g,"$1.");
+}
+function fmtDate(d){if(!d)return"";var p=d.split("-");return p[2]+"/"+p[1]+"/"+p[0];}
+function getMesLabel(m){var ms=["Janeiro","Fevereiro","Marco","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];var p=m.split("-");return ms[parseInt(p[1])-1]+" de "+p[0];}
+function today(){return new Date().toISOString().split("T")[0];}
+
+/* -- JSONBin -- */
+function jbFind(cb){
+  fetch("https://api.jsonbin.io/v3/b",{headers:{"X-Master-Key":API}})
+  .then(function(r){return r.json();})
   .then(function(d){
-    // Search all bins for our name
-    fetch("https://api.jsonbin.io/v3/b", {
-      headers: {"X-Master-Key": API}
-    })
-    .then(function(r2){ return r2.json(); })
-    .then(function(bins){
-      var found = null;
-      if(bins.result) {
-        for(var i=0; i<bins.result.length; i++){
-          if(bins.result[i].record && bins.result[i].record === BIN_NAME) {
-            found = bins.result[i].id; break;
-          }
-        }
-        // use first bin if exists
-        if(!found && bins.result.length > 0) {
-          found = bins.result[0].id;
-        }
-      }
-      if(found) {
-        BIN_ID = found;
-        setStatus("conectado");
-        cb();
-      } else {
-        createBin(cb);
-      }
-    })
-    .catch(function(){ createBin(cb); });
-  })
-  .catch(function(){ createBin(cb); });
+    var id=null;
+    if(d.result&&d.result.length>0)id=d.result[0].id;
+    if(id){BIN_ID=id;cb();}else{jbCreate(cb);}
+  }).catch(function(){jbCreate(cb);});
+}
+function jbCreate(cb){
+  fetch("https://api.jsonbin.io/v3/b",{method:"POST",headers:{"Content-Type":"application/json","X-Master-Key":API,"X-Bin-Name":"seg4-v2","X-Bin-Private":"false"},body:JSON.stringify({registros:[],ocorrencias:[]})})
+  .then(function(r){return r.json();})
+  .then(function(d){BIN_ID=d.metadata.id;cb();})
+  .catch(function(){setStat("err","Sem conexao");});
+}
+function jbRead(cb){
+  if(!BIN_ID)return cb({registros:[],ocorrencias:[]});
+  fetch("https://api.jsonbin.io/v3/b/"+BIN_ID+"/latest",{headers:{"X-Master-Key":API}})
+  .then(function(r){return r.json();})
+  .then(function(d){cb(d.record||{registros:[],ocorrencias:[]});})
+  .catch(function(){cb({registros:[],ocorrencias:[]});});
+}
+function jbWrite(data,cb){
+  fetch("https://api.jsonbin.io/v3/b/"+BIN_ID,{method:"PUT",headers:{"Content-Type":"application/json","X-Master-Key":API},body:JSON.stringify(data)})
+  .then(function(r){return r.json();})
+  .then(function(){if(cb)cb();})
+  .catch(function(){alert("Erro ao salvar. Tente novamente.");});
 }
 
-function createBin(cb) {
-  fetch("https://api.jsonbin.io/v3/b", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Master-Key": API,
-      "X-Bin-Name": BIN_NAME,
-      "X-Bin-Private": "false"
-    },
-    body: JSON.stringify({registros: []})
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(d){
-    BIN_ID = d.metadata.id;
-    setStatus("conectado");
-    cb();
-  })
-  .catch(function(){ setStatus("offline"); });
+/* -- Login -- */
+function selOpt(o){
+  curOpt=o;
+  document.getElementById("opt-lider").className="login-opt"+(o==="lider"?" sel":"");
+  document.getElementById("opt-super").className="login-opt"+(o==="super"?" sel":"");
+  document.getElementById("pin-input").focus();
 }
-
-function readBin(cb) {
-  if(!BIN_ID) return cb([]);
-  fetch("https://api.jsonbin.io/v3/b/"+BIN_ID+"/latest", {
-    headers: {"X-Master-Key": API}
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(d){ cb(d.record.registros || []); })
-  .catch(function(){ cb([]); });
-}
-
-function writeBin(registros, cb) {
-  if(!BIN_ID) return;
-  fetch("https://api.jsonbin.io/v3/b/"+BIN_ID, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Master-Key": API
-    },
-    body: JSON.stringify({registros: registros})
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(){ if(cb) cb(); })
-  .catch(function(){ showErr("Erro ao salvar. Tente novamente."); });
-}
-
-function setStatus(s) {
-  var el = document.getElementById("sync-status");
-  if(s === "conectado") el.textContent = "&#9679; conectado";
-  else if(s === "salvando") el.textContent = "&#9679; salvando...";
-  else el.innerHTML = "&#9679; offline";
-}
-
-// -- TABS ------------------------------------------------------
-function showTab(t) {
-  document.getElementById("tab-reg").className = "tab"+(t==="reg"?" active":"");
-  document.getElementById("tab-hist").className = "tab"+(t==="hist"?" active":"");
-  document.getElementById("view-reg").style.display = t==="reg"?"block":"none";
-  document.getElementById("view-hist").style.display = t==="hist"?"block":"none";
-  if(t==="hist") loadHist();
-}
-
-// -- FORM ------------------------------------------------------
-function answerComplete(sim) {
-  document.getElementById("btnS").className = "btn-big"+(sim?" yes":"");
-  document.getElementById("btnN").className = "btn-big"+(!sim?" no":"");
-  if(sim) {
-    enviarCompleto();
+function doLogin(){
+  var pin=document.getElementById("pin-input").value;
+  var err=document.getElementById("pin-err");
+  if(!curOpt){alert("Selecione Lider ou Supervisor.");return;}
+  if(curOpt==="lider"&&pin===PIN_L){
+    err.style.display="none";
+    document.getElementById("login-screen").style.display="none";
+    document.getElementById("lider-screen").style.display="block";
+    initDate();
+    jbFind(function(){});
+  } else if(curOpt==="super"&&pin===PIN_S){
+    err.style.display="none";
+    document.getElementById("login-screen").style.display="none";
+    document.getElementById("dash-screen").style.display="flex";
+    jbFind(function(){dRenderDash();});
   } else {
-    document.getElementById("step1").style.display = "none";
-    document.getElementById("step2").style.display = "block";
-    absencias = [];
-    renderAbs();
+    err.style.display="block";
+    document.getElementById("pin-input").value="";
   }
 }
-
-function addAbs() {
-  absencias.push({id: Date.now(), motorista: "", tipo: "Falta"});
-  renderAbs();
+function doLogout(){
+  document.getElementById("lider-screen").style.display="none";
+  document.getElementById("dash-screen").style.display="none";
+  document.getElementById("login-screen").style.display="flex";
+  document.getElementById("pin-input").value="";
+  curOpt="";
+  document.getElementById("opt-lider").className="login-opt";
+  document.getElementById("opt-super").className="login-opt";
 }
+document.getElementById("pin-input").addEventListener("keydown",function(e){if(e.key==="Enter")doLogin();});
 
-function removeAbs(id) {
-  absencias = absencias.filter(function(a){ return a.id !== id; });
-  renderAbs();
+/* -- Lider -- */
+function initDate(){
+  var now=new Date();
+  var dias=["Domingo","Segunda-feira","Terca-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sabado"];
+  var meses=["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+  document.getElementById("hdate").textContent=now.getDate()+" "+meses[now.getMonth()]+" "+now.getFullYear();
+  document.getElementById("hday").textContent=dias[now.getDay()];
 }
-
-function renderAbs() {
-  var opts = MOTORISTAS.map(function(m){
-    return '<option value="'+m+'">'+m+'</option>';
-  }).join("");
-  var html = "";
-  if(!absencias.length) {
-    html = '<p style="font-size:13px;color:var(--muted);text-align:center;padding:14px 0">Clique em + Adicionar para registrar uma ausencia.</p>';
-  } else {
-    for(var i=0; i<absencias.length; i++){
-      var a = absencias[i];
-      html += '<div class="abs-block">';
-      html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">';
-      html += '<span style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted)">Ausencia '+(i+1)+'</span>';
-      html += '<button class="rm-btn" onclick="removeAbs('+a.id+')">X Remover</button>';
-      html += '</div>';
-      html += '<div class="fg" style="margin-bottom:10px"><label>Motorista</label>';
-      html += '<select onchange="absencias.find(function(x){return x.id==='+a.id+'}).motorista=this.value">';
-      html += '<option value="">Selecione...</option>'+opts;
-      html += '</select></div>';
-      html += '<div class="fg" style="margin:0"><label>Tipo</label>';
-      html += '<select onchange="absencias.find(function(x){return x.id==='+a.id+'}).tipo=this.value">';
-      html += '<option value="Falta">Falta</option>';
-      html += '<option value="Folga">Folga</option>';
-      html += '<option value="Atestado">Atestado Medico</option>';
-      html += '<option value="Outro">Outro</option>';
-      html += '</select></div>';
-      html += '</div>';
+function liderTab(t){
+  document.getElementById("ltab-reg").className="lider-tab"+(t==="reg"?" active":"");
+  document.getElementById("ltab-hist").className="lider-tab"+(t==="hist"?" active":"");
+  document.getElementById("lview-reg").style.display=t==="reg"?"block":"none";
+  document.getElementById("lview-hist").style.display=t==="hist"?"block":"none";
+  if(t==="hist")lLoadHist();
+}
+function answerComplete(sim){
+  document.getElementById("lbS").className="btn-big"+(sim?" yes":"");
+  document.getElementById("lbN").className="btn-big"+(!sim?" no":"");
+  if(sim){lEnviarCompleto();}
+  else{document.getElementById("lstep1").style.display="none";document.getElementById("lstep2").style.display="block";absencias=[];renderAbs();}
+}
+function addAbs(){absencias.push({id:Date.now(),motorista:"",tipo:"Falta"});renderAbs();}
+function removeAbs(id){absencias=absencias.filter(function(a){return a.id!==id;});renderAbs();}
+function renderAbs(){
+  var opts=MOTORISTAS.map(function(m){return '<option value="'+m+'">'+m+'</option>';}).join("");
+  var html="";
+  if(!absencias.length){html='<p style="font-size:13px;color:#8c8878;text-align:center;padding:12px 0">Clique em + Adicionar.</p>';}
+  else{
+    for(var i=0;i<absencias.length;i++){
+      var a=absencias[i];
+      html+='<div class="abs-block">';
+      html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">';
+      html+='<span style="font-size:10px;font-weight:700;text-transform:uppercase;color:#8c8878">Ausencia '+(i+1)+'</span>';
+      html+='<button class="rm-btn" onclick="removeAbs('+a.id+')">X Remover</button>';
+      html+='</div>';
+      html+='<div class="fg" style="margin-bottom:10px"><label>Motorista</label>';
+      html+='<select onchange="absencias.find(function(x){return x.id==='+a.id+'}).motorista=this.value"><option value="">Selecione...</option>'+opts+'</select></div>';
+      html+='<div class="fg" style="margin:0"><label>Tipo</label>';
+      html+='<select onchange="absencias.find(function(x){return x.id==='+a.id+'}).tipo=this.value">';
+      html+='<option value="Falta">Falta</option><option value="Folga">Folga</option><option value="Atestado">Atestado</option><option value="Outro">Outro</option>';
+      html+='</select></div></div>';
     }
   }
-  document.getElementById("abs-list").innerHTML = html;
+  document.getElementById("abs-list").innerHTML=html;
 }
-
-function showErr(msg) {
-  var el = document.getElementById("err2");
-  el.textContent = msg; el.className = "err on";
-}
-
-function enviarCompleto() {
-  var hoje = new Date().toISOString().split("T")[0];
-  setStatus("salvando");
-  readBin(function(regs){
-    regs = regs.filter(function(r){ return r.data !== hoje; });
-    regs.unshift({
-      data: hoje,
-      completo: true,
-      ausencias: [],
-      obs: "",
-      ts: new Date().toISOString(),
-      origem: "Lider"
-    });
-    writeBin(regs, function(){
-      setStatus("conectado");
-      document.getElementById("step1").style.display = "none";
-      document.getElementById("sic").textContent = "OK";
-      document.getElementById("stitle").textContent = "Registro Enviado!";
-      document.getElementById("ssub").textContent = "Equipe completa hoje. Supervisor notificado.";
-      document.getElementById("step3").style.display = "block";
+function lEnviarCompleto(){
+  jbRead(function(data){
+    var regs=data.registros||[];
+    regs=regs.filter(function(r){return r.data!==today();});
+    regs.unshift({data:today(),completo:true,ausencias:[],obs:"",ts:new Date().toISOString(),origem:"Lider"});
+    jbWrite({registros:regs,ocorrencias:data.ocorrencias||[]},function(){
+      document.getElementById("lstep1").style.display="none";
+      document.getElementById("sic").textContent="&#9989;";
+      document.getElementById("stitle").textContent="Registro Enviado!";
+      document.getElementById("ssub").textContent="Equipe completa hoje.";
+      document.getElementById("lstep3").style.display="block";
     });
   });
 }
-
-function salvar() {
-  var validas = absencias.filter(function(a){ return a.motorista; });
-  if(!validas.length) { showErr("Adicione ao menos uma ausencia com motorista selecionado."); return; }
-  var obs = document.getElementById("obs").value.trim();
-  var hoje = new Date().toISOString().split("T")[0];
-  var btn = document.getElementById("btnSalvar");
-  btn.textContent = "Enviando..."; btn.disabled = true;
-  setStatus("salvando");
-  readBin(function(regs){
-    regs = regs.filter(function(r){ return r.data !== hoje; });
-    regs.unshift({
-      data: hoje,
-      completo: false,
-      ausencias: validas,
-      obs: obs,
-      ts: new Date().toISOString(),
-      origem: "Lider"
-    });
-    writeBin(regs, function(){
-      setStatus("conectado");
-      btn.textContent = "Salvar e Enviar"; btn.disabled = false;
-      document.getElementById("step2").style.display = "none";
-      document.getElementById("sic").textContent = "!!";
-      document.getElementById("stitle").textContent = "Registro Enviado!";
-      document.getElementById("ssub").textContent = validas.length+" ausencia(s) registrada(s). Supervisor foi notificado.";
-      document.getElementById("step3").style.display = "block";
+function lSalvar(){
+  var validas=absencias.filter(function(a){return a.motorista;});
+  if(!validas.length){alert("Adicione ao menos uma ausencia com motorista.");return;}
+  var obs=document.getElementById("lobs").value.trim();
+  var btn=document.getElementById("lbtnSalvar");
+  btn.textContent="Enviando...";btn.disabled=true;
+  jbRead(function(data){
+    var regs=data.registros||[];
+    regs=regs.filter(function(r){return r.data!==today();});
+    regs.unshift({data:today(),completo:false,ausencias:validas,obs:obs,ts:new Date().toISOString(),origem:"Lider"});
+    jbWrite({registros:regs,ocorrencias:data.ocorrencias||[]},function(){
+      btn.textContent="Salvar e Enviar";btn.disabled=false;
+      document.getElementById("lstep2").style.display="none";
+      document.getElementById("sic").textContent="&#9888;";
+      document.getElementById("stitle").textContent="Registro Enviado!";
+      document.getElementById("ssub").textContent=validas.length+" ausencia(s) registrada(s).";
+      document.getElementById("lstep3").style.display="block";
     });
   });
 }
-
-function resetForm() {
-  absencias = [];
-  document.getElementById("btnS").className = "btn-big";
-  document.getElementById("btnN").className = "btn-big";
-  document.getElementById("step1").style.display = "block";
-  document.getElementById("step2").style.display = "none";
-  document.getElementById("step3").style.display = "none";
-  document.getElementById("obs").value = "";
-  document.getElementById("err2").className = "err";
+function lReset(){
+  absencias=[];
+  document.getElementById("lbS").className="btn-big";
+  document.getElementById("lbN").className="btn-big";
+  document.getElementById("lstep1").style.display="block";
+  document.getElementById("lstep2").style.display="none";
+  document.getElementById("lstep3").style.display="none";
+  document.getElementById("lobs").value="";
 }
-
-// -- HISTORICO -------------------------------------------------
-function loadHist() {
-  document.getElementById("spin-hist").className = "spinner on";
-  document.getElementById("hist-list").style.display = "none";
-  readBin(function(regs){
-    document.getElementById("spin-hist").className = "spinner";
-    var el = document.getElementById("hist-list");
-    el.style.display = "block";
-    if(!regs.length){ el.innerHTML = '<p style="text-align:center;color:var(--muted);padding:24px">Nenhum registro ainda.</p>'; return; }
-    var meses = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
-    var dias = ["Dom","Seg","Ter","Qua","Qui","Sex","Sab"];
-    el.innerHTML = regs.slice(0,30).map(function(r){
-      var d = new Date(r.data+"T12:00:00");
-      var label = dias[d.getDay()]+", "+d.getDate()+" "+meses[d.getMonth()];
-      var badge = r.completo
-        ? '<span style="background:var(--gbg);color:var(--green);font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px">COMPLETA</span>'
-        : '<span style="background:var(--rbg);color:var(--red);font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px">'+r.ausencias.length+' AUSENCIA(S)</span>';
-      var abs = (r.ausencias||[]).map(function(a){
-        return '<div style="font-size:12px;margin-bottom:3px"><span class="tag tag-'+a.tipo.toLowerCase()+'">'+a.tipo.toUpperCase()+'</span> '+a.motorista+'</div>';
-      }).join("");
-      var obs = r.obs ? '<div style="font-size:12px;color:var(--muted);margin-top:4px">Obs: '+r.obs+'</div>' : '';
-      return '<div class="hist-item"><div style="display:flex;justify-content:space-between;align-items:center"><span class="hist-date">'+label+'</span>'+badge+'</div>'+(abs||obs?'<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">'+abs+obs+'</div>':'')+'</div>';
+function lLoadHist(){
+  document.getElementById("lspin").style.display="block";
+  document.getElementById("lhist-list").style.display="none";
+  jbRead(function(data){
+    document.getElementById("lspin").style.display="none";
+    var el=document.getElementById("lhist-list");
+    el.style.display="block";
+    var regs=data.registros||[];
+    if(!regs.length){el.innerHTML='<p class="empty">Nenhum registro ainda.</p>';return;}
+    var meses=["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+    var dias=["Dom","Seg","Ter","Qua","Qui","Sex","Sab"];
+    el.innerHTML=regs.slice(0,20).map(function(r){
+      var d=new Date(r.data+"T12:00:00");
+      var lbl=dias[d.getDay()]+", "+d.getDate()+" "+meses[d.getMonth()];
+      var badge=r.completo?'<span style="background:#d8f3dc;color:#2d6a4f;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px">COMPLETA</span>':'<span style="background:#ffe5e7;color:#c1121f;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px">'+(r.ausencias||[]).length+' AUSENCIA(S)</span>';
+      var abs=(r.ausencias||[]).map(function(a){return '<div style="font-size:12px;margin-bottom:2px"><span class="tag tag-'+a.tipo.toLowerCase()+'">'+a.tipo.toUpperCase()+'</span> '+a.motorista+'</div>';}).join("");
+      return '<div class="hist-item"><div style="display:flex;justify-content:space-between;align-items:center"><span class="hist-date">'+lbl+'</span>'+badge+'</div>'+(abs?'<div style="margin-top:8px;padding-top:8px;border-top:1px solid #e2dfd6">'+abs+'</div>':'')+'</div>';
     }).join("");
   });
 }
 
-// -- INIT ------------------------------------------------------
-
-window.goTab = goTab;
-window.answerComplete = answerComplete;
-window.addAbs = addAbs;
-window.removeAbs = removeAbs;
-window.salvar = salvar;
-window.resetForm = resetForm;
-
-window.onload = function() {
-  getOrCreateBin(function(){});
-};
+/* -- Dashboard -- */
+function setStat(t,msg){
+  var dot=document.getElementById("sdot");
+  var txt=document.getElementById("stext");
+  var now=new Date();
+  if(t==="ok"){dot.className="sync-dot";txt.textContent="Conectado - "+now.toLocaleDateString("pt-BR")+", "+now.toLocaleTimeString("pt-BR");}
+  else if(t==="loading"){dot.className="sync-dot warn";txt.textContent="Carregando...";}
+  else{dot.className="sync-dot err";txt.textContent=msg||"Erro de conexao";}
+}
+function dPage(p){
+  document.querySelectorAll(".dpage").forEach(function(el){el.classList.remove("active");});
+  document.querySelectorAll(".dsb").forEach(function(el){el.classList.remove("active");});
+  document.getElementById("dpage-"+p).classList.add("active");
+  document.getElementById("dnav-"+p).classList.add("active");
+  if(p==="dash")dRenderDash();
+  if(p==="ocorr")dRenderOcorr();
+  if(p==="mots")dRenderMots();
+}
+function onMesChange(){
+  MES=document.getElementById("mes-sel").value;
+  document.getElementById("ds-sub").textContent=getMesLabel(MES);
+  dRenderDash();
+}
+function dSync(){setStat("loading");dRenderDash();}
+function getOcsMes(data){
+  var regs=data.registros||[];
+  var extra=data.ocorrencias||[];
+  var result=[];
+  regs.forEach(function(r){
+    if(!r.data||!r.data.startsWith(MES))return;
+    (r.ausencias||[]).forEach(function(a){
+      if(!a.motorista)return;
+      result.push({id:"r_"+r.data+"_"+a.motorista,data:r.data,motorista:a.motorista,setor:SETOR_MAP[a.motorista]||"",tipo:a.tipo||"Falta",origem:"Lider",obs:r.obs||""});
+    });
+  });
+  extra.forEach(function(o){
+    if(!o.data||!o.data.startsWith(MES))return;
+    result.push(o);
+  });
+  return result.sort(function(a,b){return b.data.localeCompare(a.data);});
+}
+function setorTag(s){
+  var cls="",txt=s;
+  if(s==="LOG EXTERNA")cls="dtag-lo";
+  else if(s==="LOG EXTERNA - GUINCHO"){cls="dtag-log";txt="LOG GUINCHO";}
+  else if(s==="FTP")cls="dtag-ftp";
+  else if(s==="HUB OPS")cls="dtag-hub";
+  return '<span class="dtag '+cls+'">'+txt+'</span>';
+}
+function tipoTag(t){
+  var cls="";
+  if(t==="Falta")cls="dtag-falta";
+  else if(t==="Folga")cls="dtag-folga";
+  else if(t==="Atestado")cls="dtag-atestado";
+  else cls="dtag-outro";
+  return '<span class="dtag '+cls+'">'+t.toUpperCase()+'</span>';
+}
+function dRenderDash(){
+  setStat("loading");
+  jbRead(function(data){
+    setStat("ok");
+    var ocs=getOcsMes(data);
+    var regs=data.registros||[];
+    var todayReg=regs.find(function(r){return r.data===today();});
+    document.getElementById("al-warn").className="alert-box alert-warn"+((!todayReg)?" on":"");
+    document.getElementById("al-ok").className="alert-box alert-ok"+(todayReg?" on":"");
+    var faltas=ocs.filter(function(o){return o.tipo==="Falta";});
+    var atestados=ocs.filter(function(o){return o.tipo==="Atestado";});
+    var desc=0;
+    faltas.forEach(function(o){var sal=SALARIOS[o.setor]||5725.26;desc+=sal/26;});
+    var regsMes=regs.filter(function(r){return r.data&&r.data.startsWith(MES);}).length;
+    document.getElementById("kf").textContent=faltas.length;
+    document.getElementById("kf-s").textContent=atestados.length+" atestado(s)";
+    document.getElementById("kd").textContent=fmtMoney(desc);
+    document.getElementById("kr").textContent=regsMes;
+    document.getElementById("kp").textContent=fmtMoney(CONTRATO-desc);
+    var ids={"LOG EXTERNA":"lo","LOG EXTERNA - GUINCHO":"log","FTP":"ftp","HUB OPS":"hub"};
+    var dias=26;
+    for(var s in ids){
+      var sf=ocs.filter(function(o){return o.setor===s&&o.tipo==="Falta";}).length;
+      var sz=SETOR_SIZES[s]||1;
+      document.getElementById("f-"+ids[s]).textContent=sf;
+      document.getElementById("abs-"+ids[s]).textContent=((sf/(sz*dias))*100).toFixed(1)+"%";
+    }
+    var tb=document.getElementById("tb-dash");
+    if(!ocs.length){tb.innerHTML='<tr><td colspan="7" style="text-align:center;color:#8c8878;padding:2rem">Nenhuma ocorrencia no mes</td></tr>';return;}
+    tb.innerHTML=ocs.slice(0,10).map(function(o){
+      return '<tr><td>'+fmtDate(o.data)+'</td><td style="font-weight:600">'+o.motorista+'</td><td>'+setorTag(o.setor)+'</td><td>'+tipoTag(o.tipo)+'</td><td><span class="dtag '+(o.origem==="Lider"?"dtag-lider":"dtag-supervisor")+'">'+o.origem.toUpperCase()+'</span></td><td style="color:#8c8878">'+(o.obs||"&mdash;")+'</td><td><button class="dbtn-del" onclick="dDelOcorr(''+o.id+'')">&#10005;</button></td></tr>';
+    }).join("");
+  });
+}
+function dRenderOcorr(){
+  jbRead(function(data){
+    var ocs=getOcsMes(data);
+    var fs=document.getElementById("f-setor").value;
+    var ft=document.getElementById("f-tipo").value;
+    if(fs)ocs=ocs.filter(function(o){return o.setor===fs;});
+    if(ft)ocs=ocs.filter(function(o){return o.tipo===ft;});
+    var tb=document.getElementById("tb-ocorr");
+    if(!ocs.length){tb.innerHTML='<tr><td colspan="8" style="text-align:center;color:#8c8878;padding:2rem">Nenhuma ocorrencia</td></tr>';return;}
+    tb.innerHTML=ocs.map(function(o){
+      var sal=SALARIOS[o.setor]||5725.26;
+      var desc=o.tipo==="Falta"?fmtMoney(sal/26):"&mdash;";
+      return '<tr><td>'+fmtDate(o.data)+'</td><td style="font-weight:600">'+o.motorista+'</td><td>'+setorTag(o.setor)+'</td><td>'+tipoTag(o.tipo)+'</td><td>'+desc+'</td><td><span class="dtag '+(o.origem==="Lider"?"dtag-lider":"dtag-supervisor")+'">'+o.origem.toUpperCase()+'</span></td><td style="color:#8c8878">'+(o.obs||"&mdash;")+'</td><td><button class="dbtn-del" onclick="dDelOcorr(''+o.id+'')">&#10005;</button></td></tr>';
+    }).join("");
+  });
+}
+function dRenderMots(){
+  jbRead(function(data){
+    var ocs=getOcsMes(data);
+    var colors={"LOG EXTERNA":"dtag-lo","LOG EXTERNA - GUINCHO":"dtag-log","FTP":"dtag-ftp","HUB OPS":"dtag-hub"};
+    var html="";
+    for(var s in SETOR_MOTS){
+      var mots=SETOR_MOTS[s];
+      html+='<div class="mots-section"><h3><span class="dtag '+colors[s]+'">'+s+'</span><span style="font-size:12px;color:#8c8878;font-weight:400;text-transform:none;letter-spacing:0">'+mots.length+' motoristas</span></h3>';
+      html+='<div class="tc"><table><thead><tr><th>Nome</th><th>Salario</th><th>Faltas</th><th>Desconto</th></tr></thead><tbody>';
+      mots.forEach(function(m){
+        var faltas=ocs.filter(function(o){return o.motorista===m&&o.tipo==="Falta";}).length;
+        var sal=SALARIOS[s]||5725.26;
+        var desc=faltas>0?fmtMoney(faltas*(sal/26)):"&mdash;";
+        html+='<tr><td style="font-weight:600">'+m+'</td><td>'+fmtMoney(sal)+'</td><td style="color:'+(faltas>0?"#e8510a":"#27ae60")+'">'+faltas+'</td><td>'+desc+'</td></tr>';
+      });
+      html+='</tbody></table></div></div>';
+    }
+    document.getElementById("mots-list").innerHTML=html;
+  });
+}
+function abrirModal(){
+  var sel=document.getElementById("oc-mot");
+  sel.innerHTML=MOTORISTAS.sort().map(function(m){return '<option value="'+m+'">'+m+'</option>';}).join("");
+  document.getElementById("oc-data").value=today();
+  document.getElementById("oc-obs").value="";
+  document.getElementById("modal-ov").className="ov open";
+}
+function fecharModal(){document.getElementById("modal-ov").className="ov";}
+function salvarOcorr(){
+  var d=document.getElementById("oc-data").value;
+  var m=document.getElementById("oc-mot").value;
+  var t=document.getElementById("oc-tipo").value;
+  var obs=document.getElementById("oc-obs").value.trim();
+  if(!d||!m){alert("Preencha os campos!");return;}
+  jbRead(function(data){
+    if(!data.ocorrencias)data.ocorrencias=[];
+    data.ocorrencias.push({id:"ex_"+Date.now(),data:d,motorista:m,setor:SETOR_MAP[m]||"",tipo:t,origem:"Supervisor",obs:obs});
+    jbWrite(data,function(){fecharModal();dRenderDash();});
+  });
+}
+function dDelOcorr(id){
+  if(!confirm("Remover esta ocorrencia?"))return;
+  if(id.indexOf("r_")===0){alert("Ocorrencias do lider nao podem ser removidas aqui.");return;}
+  jbRead(function(data){
+    if(!data.ocorrencias)return;
+    data.ocorrencias=data.ocorrencias.filter(function(o){return o.id!==id;});
+    jbWrite(data,function(){dRenderDash();dRenderOcorr();});
+  });
+}
+document.getElementById("modal-ov").addEventListener("click",function(e){if(e.target===this)fecharModal();});
 </script>
 </body>
 </html>
