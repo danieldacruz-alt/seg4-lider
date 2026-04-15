@@ -429,7 +429,17 @@ function loadHist() {
 }
 
 // -- INIT ------------------------------------------------------
-getOrCreateBin(function(){});
+
+window.goTab = goTab;
+window.answerComplete = answerComplete;
+window.addAbs = addAbs;
+window.removeAbs = removeAbs;
+window.salvar = salvar;
+window.resetForm = resetForm;
+
+window.onload = function() {
+  getOrCreateBin(function(){});
+};
 </script>
 </body>
 </html>
