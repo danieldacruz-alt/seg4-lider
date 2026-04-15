@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEG4 — Registro do Lider</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#F7F6F2;--card:#fff;--border:#E2DFD6;--text:#1A1916;--muted:#8C8878;
+  --green:#2D6A4F;--gbg:#D8F3DC;--red:#C1121F;--rbg:#FFE5E7;
+  --amber:#B45309;--abg:#FEF3C7;--blue:#1E40AF;--bbg:#DBEAFE;--r:12px}
+body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,sans-serif;color:var(--text);min-height:100vh}
+.nav{background:var(--text);padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{color:#fff;font-weight:700;font-size:16px;letter-spacing:1px}
+.nav-sub{color:rgba(255,255,255,.5);font-size:12px}
+.wrap{max-width:520px;margin:0 auto;padding:20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:14px}
+.card-title{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.hero{text-align:center;padding:24px 0 8px}
+.hero-date{font-size:32px;font-weight:300;letter-spacing:-1px}
+.hero-day{font-size:13px;color:var(--muted);margin-top:4px}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.btn-big{padding:20px;border-radius:var(--r);border:2px solid var(--border);background:var(--card);cursor:pointer;font-size:15px;font-weight:700;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:6px;font-family:inherit}
+.btn-big .ic{font-size:28px}
+.btn-big:hover{border-color:var(--text)}
+.btn-big.yes{background:var(--gbg);border-color:var(--green);color:var(--green)}
+.btn-big.no{background:var(--rbg);border-color:var(--red);color:var(--red)}
+.fg{margin-bottom:12px}
+.fg label{font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px}
+.fg select,.fg input,.fg textarea{width:100%;padding:10px 13px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--card);color:var(--text);font-family:inherit;outline:none}
+.fg select:focus,.fg input:focus,.fg textarea:focus{border-color:var(--text)}
+.fg textarea{min-height:72px;resize:vertical}
+.abs-block{border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;background:var(--bg)}
+.btn{padding:11px 20px;border-radius:9px;border:none;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+.btn-p{background:var(--text);color:#fff;width:100%;justify-content:center}
+.btn-p:hover{background:#333}
+.btn-p:active{transform:scale(.98)}
+.btn-p:disabled{background:#aaa;cursor:not-allowed}
+.btn-s{background:var(--bg);color:var(--text);border:1px solid var(--border);font-size:12px;padding:7px 12px}
+.btn-s:hover{border-color:var(--text)}
+.rm-btn{background:none;border:none;color:var(--red);font-size:12px;cursor:pointer;font-family:inherit}
+.success{text-align:center;padding:32px 20px}
+.success .ic{font-size:52px;margin-bottom:14px}
+.success h2{font-size:20px;font-weight:700;margin-bottom:8px}
+.success p{font-size:14px;color:var(--muted);line-height:1.7}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700}
+.tag-falta{background:var(--rbg);color:var(--red)}
+.tag-folga{background:var(--abg);color:var(--amber)}
+.tag-atestado{background:var(--bbg);color:var(--blue)}
+.tag-outro{background:var(--bg);color:var(--muted)}
+.hist-item{padding:12px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px}
+.hist-date{font-size:12px;font-weight:700;margin-bottom:4px}
+.hist-abs{font-size:12px;color:var(--muted);margin-top:6px}
+.spinner{display:none;text-align:center;padding:20px;color:var(--muted);font-size:14px}
+.spinner.on{display:block}
+.err{background:var(--rbg);color:var(--red);padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px;display:none}
+.err.on{display:block}
+.tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:16px}
+.tab{padding:10px 16px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab.active{color:var(--text);border-bottom-color:var(--text)}
+</style>
+</head>
+<body>
+<div class="nav">
+  <div>
+    <div class="nav-logo">SEG4</div>
+    <div class="nav-sub">Registro do Lider</div>
+  </div>
+  <div id="sync-status" style="font-size:11px;color:rgba(255,255,255,.5)">&#9679; conectando...</div>
+</div>
+
+<div class="wrap">
+  <div class="tabs">
+    <div class="tab active" id="tab-reg" onclick="showTab('reg')">Registro Diario</div>
+    <div class="tab" id="tab-hist" onclick="showTab('hist')">Historico</div>
+  </div>
+
+  <!-- REGISTRO -->
+  <div id="view-reg">
+    <div class="hero">
+      <div class="hero-date" id="hdate"></div>
+      <div class="hero-day" id="hday"></div>
+    </div>
+
+    <div id="step1">
+      <div class="card">
+        <div class="card-title">Status da equipe hoje</div>
+        <p style="font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.6">A equipe SEG4 esta completa hoje?</p>
+        <div class="btn-row">
+          <button class="btn-big" id="btnS" onclick="answerComplete(true)">
+            <span class="ic">&#9989;</span><span>SIM</span>
+            <span style="font-size:11px;font-weight:400;opacity:.7">Todos presentes</span>
+          </button>
+          <button class="btn-big" id="btnN" onclick="answerComplete(false)">
+            <span class="ic">&#9888;&#65039;</span><span>NAO</span>
+            <span style="font-size:11px;font-weight:400;opacity:.7">Ha ausencias</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="step2" style="display:none">
+      <div class="err" id="err2"></div>
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <span class="card-title" style="margin:0">Ausencias</span>
+          <button class="btn btn-s" onclick="addAbs()">+ Adicionar</button>
+        </div>
+        <div id="abs-list"><p style="font-size:13px;color:var(--muted);text-align:center;padding:14px 0">Clique em + Adicionar para registrar uma ausencia.</p></div>
+      </div>
+      <div class="card">
+        <div class="fg" style="margin:0">
+          <label>Observacoes (opcional)</label>
+          <textarea id="obs" placeholder="Ex: comunicacao tardia, motorista justificou..."></textarea>
+        </div>
+      </div>
+      <button class="btn btn-p" id="btnSalvar" onclick="salvar()">Salvar e Enviar</button>
+      <div style="text-align:center;margin-top:12px">
+        <span style="font-size:12px;color:var(--muted);cursor:pointer" onclick="resetForm()">&#8592; Voltar</span>
+      </div>
+    </div>
+
+    <div id="step3" style="display:none">
+      <div class="card">
+        <div class="success">
+          <div class="ic" id="sic">&#9989;</div>
+          <h2 id="stitle">Registro Enviado!</h2>
+          <p id="ssub"></p>
+        </div>
+      </div>
+      <button class="btn btn-s" style="width:100%;text-align:center" onclick="resetForm()">Novo Registro</button>
+    </div>
+  </div>
+
+  <!-- HISTORICO -->
+  <div id="view-hist" style="display:none">
+    <div class="spinner on" id="spin-hist">Carregando historico...</div>
+    <div id="hist-list" style="display:none"></div>
+  </div>
+</div>
+
+<script>
+var API = "$2a$10$4xpgwCDBwtfpRMCVvHrxduVGEK1n9afJeVypFAVHbsQON15c6C/ku";
+var BIN_ID = null;
+var BIN_NAME = "seg4-registros";
+
+var MOTORISTAS = [
+  "DOUGLAS RODRIGUES DE MELO",
+  "EMERSON DA COSTA PARRA",
+  "JEFERSON LUIS DE SOUZA",
+  "RAQUEL DOS SANTOS AVELINO",
+  "ROGERIO DE JESUS OLIVEIRA",
+  "RONE MARQUES DA SILVA",
+  "RAPHAEL PINHEIRO SOUTO DE ALMEIDA",
+  "ELIEL VLADIMIR DOS SANTOS",
+  "GABRIEL HENRIQUE GONCALVES",
+  "MARCIEL PIA DA SILVA",
+  "RAFAEL SANTOS DIAS",
+  "SERGIO AVELINO MACHADO",
+  "WESLEY FERREIRA CARNEIRO DA SILVA",
+  "ADRIANO MARCOS SANTOS AURELIANO",
+  "EVERITON SANTOS NASCIMENTO",
+  "GABRIEL BORGES SOUTO",
+  "MAURICIO SANTOS DAMASCENO",
+  "REINALDO VICENTE DE ALCANTARA"
+];
+
+var absencias = [];
+
+// -- DATA ------------------------------------------------------
+(function(){
+  var now = new Date();
+  var dias = ["Domingo","Segunda-feira","Terca-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sabado"];
+  var meses = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+  document.getElementById("hdate").textContent = now.getDate()+" "+meses[now.getMonth()]+" "+now.getFullYear();
+  document.getElementById("hday").textContent = dias[now.getDay()];
+})();
+
+// -- JSONBIN ---------------------------------------------------
+function getOrCreateBin(cb) {
+  // Try to find existing bin
+  fetch("https://api.jsonbin.io/v3/b?X-Bin-Name="+BIN_NAME, {
+    headers: {"X-Master-Key": API}
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    // Search all bins for our name
+    fetch("https://api.jsonbin.io/v3/b", {
+      headers: {"X-Master-Key": API}
+    })
+    .then(function(r2){ return r2.json(); })
+    .then(function(bins){
+      var found = null;
+      if(bins.result) {
+        for(var i=0; i<bins.result.length; i++){
+          if(bins.result[i].record && bins.result[i].record === BIN_NAME) {
+            found = bins.result[i].id; break;
+          }
+        }
+        // use first bin if exists
+        if(!found && bins.result.length > 0) {
+          found = bins.result[0].id;
+        }
+      }
+      if(found) {
+        BIN_ID = found;
+        setStatus("conectado");
+        cb();
+      } else {
+        createBin(cb);
+      }
+    })
+    .catch(function(){ createBin(cb); });
+  })
+  .catch(function(){ createBin(cb); });
+}
+
+function createBin(cb) {
+  fetch("https://api.jsonbin.io/v3/b", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Master-Key": API,
+      "X-Bin-Name": BIN_NAME,
+      "X-Bin-Private": "false"
+    },
+    body: JSON.stringify({registros: []})
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    BIN_ID = d.metadata.id;
+    setStatus("conectado");
+    cb();
+  })
+  .catch(function(){ setStatus("offline"); });
+}
+
+function readBin(cb) {
+  if(!BIN_ID) return cb([]);
+  fetch("https://api.jsonbin.io/v3/b/"+BIN_ID+"/latest", {
+    headers: {"X-Master-Key": API}
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){ cb(d.record.registros || []); })
+  .catch(function(){ cb([]); });
+}
+
+function writeBin(registros, cb) {
+  if(!BIN_ID) return;
+  fetch("https://api.jsonbin.io/v3/b/"+BIN_ID, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Master-Key": API
+    },
+    body: JSON.stringify({registros: registros})
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(){ if(cb) cb(); })
+  .catch(function(){ showErr("Erro ao salvar. Tente novamente."); });
+}
+
+function setStatus(s) {
+  var el = document.getElementById("sync-status");
+  if(s === "conectado") el.textContent = "&#9679; conectado";
+  else if(s === "salvando") el.textContent = "&#9679; salvando...";
+  else el.innerHTML = "&#9679; offline";
+}
+
+// -- TABS ------------------------------------------------------
+function showTab(t) {
+  document.getElementById("tab-reg").className = "tab"+(t==="reg"?" active":"");
+  document.getElementById("tab-hist").className = "tab"+(t==="hist"?" active":"");
+  document.getElementById("view-reg").style.display = t==="reg"?"block":"none";
+  document.getElementById("view-hist").style.display = t==="hist"?"block":"none";
+  if(t==="hist") loadHist();
+}
+
+// -- FORM ------------------------------------------------------
+function answerComplete(sim) {
+  document.getElementById("btnS").className = "btn-big"+(sim?" yes":"");
+  document.getElementById("btnN").className = "btn-big"+(!sim?" no":"");
+  if(sim) {
+    enviarCompleto();
+  } else {
+    document.getElementById("step1").style.display = "none";
+    document.getElementById("step2").style.display = "block";
+    absencias = [];
+    renderAbs();
+  }
+}
+
+function addAbs() {
+  absencias.push({id: Date.now(), motorista: "", tipo: "Falta"});
+  renderAbs();
+}
+
+function removeAbs(id) {
+  absencias = absencias.filter(function(a){ return a.id !== id; });
+  renderAbs();
+}
+
+function renderAbs() {
+  var opts = MOTORISTAS.map(function(m){
+    return '<option value="'+m+'">'+m+'</option>';
+  }).join("");
+  var html = "";
+  if(!absencias.length) {
+    html = '<p style="font-size:13px;color:var(--muted);text-align:center;padding:14px 0">Clique em + Adicionar para registrar uma ausencia.</p>';
+  } else {
+    for(var i=0; i<absencias.length; i++){
+      var a = absencias[i];
+      html += '<div class="abs-block">';
+      html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">';
+      html += '<span style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted)">Ausencia '+(i+1)+'</span>';
+      html += '<button class="rm-btn" onclick="removeAbs('+a.id+')">X Remover</button>';
+      html += '</div>';
+      html += '<div class="fg" style="margin-bottom:10px"><label>Motorista</label>';
+      html += '<select onchange="absencias.find(function(x){return x.id==='+a.id+'}).motorista=this.value">';
+      html += '<option value="">Selecione...</option>'+opts;
+      html += '</select></div>';
+      html += '<div class="fg" style="margin:0"><label>Tipo</label>';
+      html += '<select onchange="absencias.find(function(x){return x.id==='+a.id+'}).tipo=this.value">';
+      html += '<option value="Falta">Falta</option>';
+      html += '<option value="Folga">Folga</option>';
+      html += '<option value="Atestado">Atestado Medico</option>';
+      html += '<option value="Outro">Outro</option>';
+      html += '</select></div>';
+      html += '</div>';
+    }
+  }
+  document.getElementById("abs-list").innerHTML = html;
+}
+
+function showErr(msg) {
+  var el = document.getElementById("err2");
+  el.textContent = msg; el.className = "err on";
+}
+
+function enviarCompleto() {
+  var hoje = new Date().toISOString().split("T")[0];
+  setStatus("salvando");
+  readBin(function(regs){
+    regs = regs.filter(function(r){ return r.data !== hoje; });
+    regs.unshift({
+      data: hoje,
+      completo: true,
+      ausencias: [],
+      obs: "",
+      ts: new Date().toISOString(),
+      origem: "Lider"
+    });
+    writeBin(regs, function(){
+      setStatus("conectado");
+      document.getElementById("step1").style.display = "none";
+      document.getElementById("sic").textContent = "OK";
+      document.getElementById("stitle").textContent = "Registro Enviado!";
+      document.getElementById("ssub").textContent = "Equipe completa hoje. Supervisor notificado.";
+      document.getElementById("step3").style.display = "block";
+    });
+  });
+}
+
+function salvar() {
+  var validas = absencias.filter(function(a){ return a.motorista; });
+  if(!validas.length) { showErr("Adicione ao menos uma ausencia com motorista selecionado."); return; }
+  var obs = document.getElementById("obs").value.trim();
+  var hoje = new Date().toISOString().split("T")[0];
+  var btn = document.getElementById("btnSalvar");
+  btn.textContent = "Enviando..."; btn.disabled = true;
+  setStatus("salvando");
+  readBin(function(regs){
+    regs = regs.filter(function(r){ return r.data !== hoje; });
+    regs.unshift({
+      data: hoje,
+      completo: false,
+      ausencias: validas,
+      obs: obs,
+      ts: new Date().toISOString(),
+      origem: "Lider"
+    });
+    writeBin(regs, function(){
+      setStatus("conectado");
+      btn.textContent = "Salvar e Enviar"; btn.disabled = false;
+      document.getElementById("step2").style.display = "none";
+      document.getElementById("sic").textContent = "!!";
+      document.getElementById("stitle").textContent = "Registro Enviado!";
+      document.getElementById("ssub").textContent = validas.length+" ausencia(s) registrada(s). Supervisor foi notificado.";
+      document.getElementById("step3").style.display = "block";
+    });
+  });
+}
+
+function resetForm() {
+  absencias = [];
+  document.getElementById("btnS").className = "btn-big";
+  document.getElementById("btnN").className = "btn-big";
+  document.getElementById("step1").style.display = "block";
+  document.getElementById("step2").style.display = "none";
+  document.getElementById("step3").style.display = "none";
+  document.getElementById("obs").value = "";
+  document.getElementById("err2").className = "err";
+}
+
+// -- HISTORICO -------------------------------------------------
+function loadHist() {
+  document.getElementById("spin-hist").className = "spinner on";
+  document.getElementById("hist-list").style.display = "none";
+  readBin(function(regs){
+    document.getElementById("spin-hist").className = "spinner";
+    var el = document.getElementById("hist-list");
+    el.style.display = "block";
+    if(!regs.length){ el.innerHTML = '<p style="text-align:center;color:var(--muted);padding:24px">Nenhum registro ainda.</p>'; return; }
+    var meses = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+    var dias = ["Dom","Seg","Ter","Qua","Qui","Sex","Sab"];
+    el.innerHTML = regs.slice(0,30).map(function(r){
+      var d = new Date(r.data+"T12:00:00");
+      var label = dias[d.getDay()]+", "+d.getDate()+" "+meses[d.getMonth()];
+      var badge = r.completo
+        ? '<span style="background:var(--gbg);color:var(--green);font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px">COMPLETA</span>'
+        : '<span style="background:var(--rbg);color:var(--red);font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px">'+r.ausencias.length+' AUSENCIA(S)</span>';
+      var abs = (r.ausencias||[]).map(function(a){
+        return '<div style="font-size:12px;margin-bottom:3px"><span class="tag tag-'+a.tipo.toLowerCase()+'">'+a.tipo.toUpperCase()+'</span> '+a.motorista+'</div>';
+      }).join("");
+      var obs = r.obs ? '<div style="font-size:12px;color:var(--muted);margin-top:4px">Obs: '+r.obs+'</div>' : '';
+      return '<div class="hist-item"><div style="display:flex;justify-content:space-between;align-items:center"><span class="hist-date">'+label+'</span>'+badge+'</div>'+(abs||obs?'<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">'+abs+obs+'</div>':'')+'</div>';
+    }).join("");
+  });
+}
+
+// -- INIT ------------------------------------------------------
+getOrCreateBin(function(){});
+</script>
+</body>
+</html>
